@@ -42,7 +42,7 @@
 	$bmt_locales['manage-htaccess']['single']='Row';
 
 	/*DATATYPES*/
-	$bmt_locales['manage-datatypes']['manage']='Manage datatypes';
+	$bmt_locales['manage-datatypes']['manage']='Manage off-chain data';
 	$bmt_locales['manage-datatypes']['gender']='m';
 	$bmt_locales['manage-datatypes']['single']='Datatype';
 	
@@ -86,7 +86,7 @@
 	$bmt_locales['settings']['menu']='Settings';
 		$bmt_locales['manage_admins']['menu']='Manage administrators';
 		$bmt_locales['configs']['menu']='Configurations';
-		$bmt_locales['manage_datatypes']['menu']='Manage datatypes';
+		$bmt_locales['manage_datatypes']['menu']='Manage off-chain data';
 	$bmt_locales['info']['menu']='Informations';
 	$bmt_locales['logout']['menu']='Logout';
 ?>
