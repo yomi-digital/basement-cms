@@ -63,7 +63,7 @@ include('layout/header.php'); ?>
       <div class="pad20">
         <div class="portlet" style="display: flex;">
           <form @submit.prevent="false" class="col-xs-12 col-md-6" style="margin:0 auto;">
-            <div v-if="!preview">
+            <div v-show="!preview">
               <div class="form-group">
                 <label for="set">Network</label>
                 <select class="form-control" name="set" v-model="network">
@@ -73,15 +73,27 @@ include('layout/header.php'); ?>
               </div>
               <div class="form-group">
                 <label for="title">Receiver address</label>
-                <input type="text" class="form-control" name="toAddress" placeholder="Insert receiver address" v-model="toAddress">
+                <input type="text" class="form-control" name="toAddress" placeholder="Insert receiver address (leave it blank to assign to owner address)" v-model="toAddress">
               </div>
               <div class="form-group">
                 <label for="title">Title</label>
                 <input type="text" class="form-control" name="title" placeholder="Insert title" v-model="titolo">
               </div>
               <div class="form-group">
+                <label for="title">Artist name</label>
+                <input type="text" class="form-control" name="artist_name" placeholder="Insert artist name" v-model="artist_name">
+              </div>
+              <div class="form-group">
                 <label for="description">Description</label>
-                <textarea class="form-control" max="2000" style="height: 150px;" name="description" id="description"></textarea>
+                <textarea class="form-control" max="2000" style="height: 150px;" name="description" v-model="description" id="description"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="title">Year</label>
+                <input type="text" class="form-control" name="year" placeholder="Insert year" v-model="year">
+              </div>
+              <div class="form-group">
+                <label for="title">Collection</label>
+                <input type="text" class="form-control" name="collection" placeholder="Insert collection" v-model="collection">
               </div>
               <div class="form-group" style="position:relative">
                 <label for="image">Media File</label>
@@ -94,7 +106,7 @@ include('layout/header.php'); ?>
                 <input type="number" class="form-control" name="quantity" placeholder="Insert quantity" min="1" v-model="quantity">
               </div>
             </div>
-            <div v-if="preview">
+            <div v-show="preview">
               <pre>{{preview}}</pre>
             </div>
             <hr>
@@ -102,11 +114,12 @@ include('layout/header.php'); ?>
               <label for="title">Minting password</label>
               <input type="password" class="form-control" placeholder="Insert your minting password" name="pwdvector" v-model="pwdvector">
             </div>
-            <button type="submit" v-if="!preview && !loading" class="btn btn-primary" v-if="!loading" style="width:100%" @click="mintNFT(false)">GENERATE NFT METADATA</button>
-            <button type="submit" v-if="preview && !loading" class="btn btn-primary" v-if="!loading" style="width:100%" @click="mintNFT(true)">MINT NFT</button>
+            <button type="submit" v-if="!preview && !loading" class="btn btn-primary" style="width:100%" @click="mintNFT(false)">GENERATE NFT METADATA</button>
+            <button type="submit" v-if="preview && !loading && !minted" class="btn btn-primary" style="width:100%" @click="mintNFT(true)">MINT NFT</button>
             <i class="fa fa-spinner ml-2" v-if="loading"></i>
             <h4 id="errorMinting" v-show="!editSuccess && !loading" style="color:#b12403"></h4>
             <h4 style="color:darkgreen" v-if="editSuccess">Nft created successfully <i class="fa fa-check ml-2" style="color:darkgreen"></i></h4>
+            <button type="submit" v-if="minted" class="btn btn-primary" style="width:100%" @click="reload()">MINT NEW NFT</button>
           </form>
         </div>
         <!--portlet-->
@@ -150,12 +163,33 @@ include('layout/header.php'); ?>
           mainnet: "<?php echo mainnet_contract_address; ?>"
         },
         toAddress: "",
-        preview: ""
+        artist_name: "",
+        preview: "",
+        year: "",
+        description: "",
+        collection: "",
+        minted: false
       }
     },
     methods: {
+      reload(){
+        const app = this
+        app.pwdvector = ''
+        app.titolo = ''
+        app.toAddress = ''
+        app.artist_name = ''
+        app.preview = ''
+        app.year = ''
+        app.collection = ''
+        app.description = ''
+        app.preview = ''
+        app.network = 'testnet'
+        app.image = ''
+        app.quantity = 1
+        app.minted = false
+      },
       async mintNFT(reallyMint = false) {
-        if (this.titolo == '' || document.getElementById('image').value.length == 0 || this.quantity < 2 || document.getElementById('description').value.length == 0) {
+        if (this.titolo == '' || document.getElementById('image').value.length == 0 || document.getElementById('description').value.length == 0) {
           this.editSuccess = false
           document.getElementById('errorMinting').innerText = 'Compila tutti i campi correttamente'
         } else {
@@ -167,17 +201,20 @@ include('layout/header.php'); ?>
             let data = new window.FormData();
             data.append("title", app.titolo.trim());
             data.append("file", document.getElementById('image').files[0]);
-            data.append("description", document.getElementById('description').value);
+            data.append("description", app.description);
             data.append("proxy_address", this.proxy[this.network].address);
             data.append("contract", this.contract[this.network]);
-            data.append('attributes', '[{"trait_type":"ascension_level","value":""}]');
+            data.append('attributes', '[{"trait_type":"year","value":"' + app.year + '"},{"trait_type":"collection","value":"' + app.collection + '"},{"trait_type":"artist","value":"' + app.artist_name + '"}]');
+            data.append('owner_license', "nifty");
+            data.append('artist_name', app.artist_name);
             data.append('mint', reallyMint);
-            data.append('address', this.toAddress);
-            data.append('custom_method', '{"method": "proxyMintNFT", "attributes": ["<ADDRESS>","<NFT>"]}');
+            if (this.toAddress.length > 0) {
+              data.append('address', this.toAddress);
+            }
             data.append('amount', parseInt(app.quantity));
-            data.append('proxy_mnemonic', this.pwdvector + this.proxy[this.network].mnemonic);
+            data.append('proxy_mnemonic', this.pwdvector + "*" + this.proxy[this.network].mnemonic);
             let mintingURL = '<?php echo umi_url; ?>/nfts/mint';
-            if (parseInt(app.quantity) > 1) {
+            if (parseInt(app.quantity) > 1 && app.preview !== "" && reallyMint === true) {
               mintingURL = '<?php echo umi_url; ?>/nfts/batch-mint';
             }
             let config = {
@@ -195,6 +232,10 @@ include('layout/header.php'); ?>
               app.loading = false
               app.editSuccess = false
             } else {
+              if (app.preview !== "") {
+                app.minted = true
+              }
+              app.preview = res.data
               app.loading = false
               app.editSuccess = true
             }

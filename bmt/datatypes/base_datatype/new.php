@@ -6,7 +6,7 @@
 					$max=count($custom_datatypes)/2;
 					$i=1;
 					foreach ($custom_datatypes as $field){ 
-						if($i==1){echo '<div class="col-sm-6">';}
+						if($i==1){echo '<div class="col-sm-6 col-sm-offset-3">';}
 						$instructions=returnFieldInstructions($field['Comment']);
 						if($instructions['type']!='custom'){
 							echo returnCorrectInputField($instructions['type'], $field['Field'], $instructions['required'], $instructions['specs'], '');

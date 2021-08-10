@@ -16,12 +16,10 @@
 																					}
 																					?>">
 				<?php echo $bmt_locales['pages']['menu']; ?></a>
-				<?php if (umi_url != '' && umi_url == 'umi_url') { ?>
 			<a href="<?php echo $subdomain; ?>/bmt/nfts" class="bmt-menu-button <?php if ($route == 'nfts') {
 																					echo 'bmt-menu-button-active';
 																				} ?>">
 				NFTs</a>
-				<?php } ?>
 			<a href="<?php echo $subdomain; ?>/bmt/menu" class="bmt-menu-button <?php if ($route == 'menu') {
 																					echo 'bmt-menu-button-active';
 																				} ?>">

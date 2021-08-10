@@ -19,10 +19,10 @@ $subroot = '../';
 			<a href="/bmt/minting" style="float:right; margin:10px 14px 0px 0px" class="bmt-header-button"><i class="fa fa-plus"></i></a>
 			<form style="margin: 14px 12px; float:right;display:flex; align-items:center;" @submit.prevent="search()">
 				<select v-model="contract" class="form-control" style="margin-right:10px">
-					<option value="0x58f44B5f9D7EEd33054B7F184d6C44A6AF6bb88b">Mainnet</option>
-					<option value="0x6B64717A99e9a909751AaeB0EE5a4bF0D355a1fE">Testnet</option>
+					<option value="<?php echo mainnet_contract_address; ?>">Mainnet</option>
+					<option value="<?php echo testnet_contract_address; ?>">Testnet</option>
 				</select>
-				<input type="text" placeholder="Search..." class="form-control" v-model="searcher" @focus="searching = true" @focusout="(searcher.length == 0) ? searching = false : searching = true">
+				<input type="text" placeholder="Search..." class="form-control" v-model="searcher" @focusout="(searcher.length == 0) ? searching = false : searching = true">
 				<i class="fa fa-search" style="margin:0 6px; cursor:pointer" @click="search()"></i>
 			</form>
 			<button class="btn btn-primary" @click="showLogs = !showLogs" style="margin:14px 8px 0 0; float:right">View server logs</button>
@@ -40,7 +40,7 @@ $subroot = '../';
 											<th>Title</th>
 											<th>Owner</th>
 											<th>Description</th>
-											<th>Image</th>
+											<th class="text-center">Image</th>
 											<th style="text-align:center"><i class="fa fa-edit"></i></th>
 										</tr>
 									</thead>
@@ -49,21 +49,12 @@ $subroot = '../';
 											<td v-html="nft.title"></td>
 											<td v-html="nft.owner"></td>
 											<td v-html="nft.metadata.description" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 300px;"></td>
-											<td v-html="'image'"></td>
+											<td class="text-center"><img style="float:none;display:inline-block" :src="JSON.parse(nft.metadata).image.replace('ipfs.io','hub.textile.io')" height="25"></td>
 											<td style="text-align:center; width:60px">
-												<a :href="'/bmt/nft/'+nft.ipfs_hash" id="seeBtn" class="bmt-small-button"><i class="fa fa-eye"></i></a>
+												<a :href="'/bmt/nft/'+nft.contract+'/'+nft.ipfs_hash" id="seeBtn" class="bmt-small-button"><i class="fa fa-eye"></i></a>
 											</td>
 										</tr>
-										<tr v-for="nft in nftsSearch" v-show="nftsSearch.length > 0 && searching">
-											<td v-html="nft.title"></td>
-											<td v-html="nft.owner"></td>
-											<td v-html="nft.metadata.description" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 300px;"></td>
-											<td v-html="'image'"></td>
-											<td style="text-align:center; width:60px">
-												<a :href="'/bmt/nft/'+nft.ipfs_hash" id="seeBtn" class="bmt-small-button"><i class="fa fa-eye"></i></a>
-											</td>
-										</tr>
-										<tr v-show="(nfts.length == 0 && !searching) || (nftsSearch.length == 0 && searching)">
+										<tr v-show="nfts.length === 0 && !searching">
 											<td colspan="9">
 												<h4 style="text-align: center; margin:20px 0">No NFTs found</h4>
 											</td>
@@ -115,7 +106,6 @@ $subroot = '../';
 			data() {
 				return {
 					nfts: [],
-					nftsSearch: [],
 					currentPage: (parseInt('<?php echo explode("/", $_SERVER['REQUEST_URI'])[3]; ?>') >= 1) ? parseInt('<?php echo explode("/", $_SERVER['REQUEST_URI'])[3]; ?>') : (localStorage.getItem('page') != null) ? parseInt(localStorage.getItem('page')) : 1,
 					totalPages: 0,
 					customPage: 1,
@@ -124,40 +114,28 @@ $subroot = '../';
 					searching: false,
 					logs: {},
 					showLogs: false,
-					contract: '0x58f44B5f9D7EEd33054B7F184d6C44A6AF6bb88b'
+					contract: '<?php echo mainnet_contract_address; ?>'
 				}
 			},
 			watch: {
 				currentPage: function(val) {
-					console.log(val)
 					this.currentPage = val
 					if (!this.searching) {
-						this.getNFTs()
+						this.search()
 						localStorage.setItem('page', this.currentPage)
 					}
 				},
 				searchPage: function(val) {
-					console.log(val)
 					this.searchPage = val
-					if (this.searching) {
-						this.search()
-						localStorage.setItem('searchPage', this.searchPage)
-					}
+					this.search()
+					localStorage.setItem('searchPage', this.searchPage)
 				},
+				contract: function(val) {
+					this.searchPage = 1
+					this.search()
+				}
 			},
 			methods: {
-				async getNFTs() {
-					let res = await axios.post('<?php echo umi_url; ?>/nfts/available', {
-						owner: '',
-						contract: this.contract,
-						searcher: '',
-						page: 1
-					})
-					if (res.data.error == false) {
-						this.nfts = res.data.nfts.items
-						this.totalPages = res.data.nfts.meta.totalPages
-					}
-				},
 				async search() {
 					this.searching = true
 					let res = await axios.post('<?php echo umi_url; ?>/nfts/search', {
@@ -166,8 +144,9 @@ $subroot = '../';
 						searcher: this.searcher,
 						page: this.searchPage
 					})
-					this.nftsSearch = res.data.nfts.items
+					this.nfts = res.data.nfts.items
 					this.currentPage = res.data.nfts.meta.currentPage
+					this.searching = false
 				},
 				async getLogs() {
 					try {
@@ -179,7 +158,7 @@ $subroot = '../';
 				}
 			},
 			async mounted() {
-				this.getNFTs()
+				this.search()
 				this.getLogs()
 				setInterval(() => this.getLogs(), 15000)
 			}

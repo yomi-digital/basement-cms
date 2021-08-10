@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Ago 09, 2021 alle 12:41
+-- Creato il: Ago 10, 2021 alle 16:19
 -- Versione del server: 5.7.30-0ubuntu0.18.04.1-log
 -- Versione PHP: 7.4.8
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `martix_db`
+-- Database: `basement_db`
 --
 
 -- --------------------------------------------------------
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `admins` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `username` varchar(255) DEFAULT NULL COMMENT 'print=>1;type=>text;required=>required',
   `password` varchar(255) DEFAULT NULL COMMENT 'print=>0;type=>password;required=>required;',
   `lastLogin` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'no',
@@ -49,7 +49,7 @@ INSERT INTO `admins` (`id`, `username`, `password`, `lastLogin`, `level`) VALUES
 --
 
 CREATE TABLE `configs` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `code` varchar(400) DEFAULT NULL COMMENT 'type=>text;print=>1',
   `value` text COMMENT 'type=>text;print=>1',
   `mod` int(11) DEFAULT '1' COMMENT 'no'
@@ -81,11 +81,26 @@ INSERT INTO `configs` (`id`, `code`, `value`, `mod`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `datatype_users`
+--
+
+CREATE TABLE `datatype_users` (
+  `id` int(6) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>;type=>text;specs=>;multiple=>;required=>',
+  `surname` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>;type=>text;specs=>;multiple=>;required=>',
+  `email` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>;type=>text;specs=>;multiple=>;required=>',
+  `phone_number` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>;type=>text;specs=>;multiple=>;required=>',
+  `airdrop` varchar(3) DEFAULT NULL COMMENT 'print=>1;order=>;type=>select;specs=>[YES,NO];multiple=>;required=>'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `db_backup`
 --
 
 CREATE TABLE `db_backup` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `backup_name` varchar(400) NOT NULL,
   `backup_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -97,7 +112,7 @@ CREATE TABLE `db_backup` (
 --
 
 CREATE TABLE `htaccess` (
-  `id` int(6) UNSIGNED NOT NULL,
+  `id` int(6) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `line` text COMMENT 'print=>1;order=>2;type=>textarea;specs=>html;multiple=>;required=>',
   `active` varchar(2) DEFAULT NULL COMMENT 'print=>1;order=>0;type=>select;specs=>[SI,NO];multiple=>;required=>',
   `ordine` int(11) DEFAULT NULL COMMENT 'print=>1;order=>1;type=>text;specs=>;multiple=>;required=>'
@@ -117,7 +132,7 @@ INSERT INTO `htaccess` (`id`, `line`, `active`, `ordine`) VALUES
 --
 
 CREATE TABLE `languages` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `output_name` varchar(20) NOT NULL,
   `uni_code` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -136,7 +151,7 @@ INSERT INTO `languages` (`id`, `output_name`, `uni_code`) VALUES
 --
 
 CREATE TABLE `menu` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `order` int(11) DEFAULT NULL COMMENT 'print=>1;order=>0;type=>text;specs=>;multiple=>;required=>',
   `type` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>0;type=>select;specs=>[TOP,SIDEBAR];multiple=>;required=>',
   `title` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>0;type=>text;specs=>;multiple=>;required=>',
@@ -151,7 +166,7 @@ CREATE TABLE `menu` (
 --
 
 CREATE TABLE `pages` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `permalink` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>0;type=>custom;specs=>;multiple=>;required=>required',
   `language` longtext COMMENT 'print=>1;order=>0;type=>select;specs=>languages->(output_name)->(uni_code);multiple=>;required=>required',
   `title` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>0;type=>text;specs=>;multiple=>;required=>required',
@@ -180,7 +195,7 @@ INSERT INTO `pages` (`id`, `permalink`, `language`, `title`, `subtitle`, `conten
 --
 
 CREATE TABLE `translations` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `globale` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>1;type=>custom;specs=>;multiple=>;required=>',
   `is_html` varchar(2) DEFAULT NULL COMMENT 'print=>;order=>2;type=>select;specs=>[SI,NO];multiple=>;required=>',
   `locales` longtext COMMENT 'print=>1;order=>4;type=>custom;specs=>;multiple=>;required=>',
@@ -194,111 +209,6 @@ CREATE TABLE `translations` (
 INSERT INTO `translations` (`id`, `globale`, `is_html`, `locales`, `is_js`) VALUES
 (8, 'helloworld', NULL, '[{\"language\":\"en\",\"locale\":\"<p>Hello World.</p>\"}]', NULL);
 
---
--- Indici per le tabelle scaricate
---
-
---
--- Indici per le tabelle `admins`
---
-ALTER TABLE `admins`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `configs`
---
-ALTER TABLE `configs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `db_backup`
---
-ALTER TABLE `db_backup`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `backup_name` (`backup_name`);
-
---
--- Indici per le tabelle `htaccess`
---
-ALTER TABLE `htaccess`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `languages`
---
-ALTER TABLE `languages`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `menu`
---
-ALTER TABLE `menu`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `pages`
---
-ALTER TABLE `pages`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `translations`
---
-ALTER TABLE `translations`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT per le tabelle scaricate
---
-
---
--- AUTO_INCREMENT per la tabella `admins`
---
-ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT per la tabella `configs`
---
-ALTER TABLE `configs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
-
---
--- AUTO_INCREMENT per la tabella `db_backup`
---
-ALTER TABLE `db_backup`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT per la tabella `htaccess`
---
-ALTER TABLE `htaccess`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT per la tabella `languages`
---
-ALTER TABLE `languages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT per la tabella `menu`
---
-ALTER TABLE `menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT per la tabella `pages`
---
-ALTER TABLE `pages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
--- AUTO_INCREMENT per la tabella `translations`
---
-ALTER TABLE `translations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

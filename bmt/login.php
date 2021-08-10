@@ -41,7 +41,6 @@ if (isset($_POST['login'])) {
 		header('location:' . $MM_redirectLoginFailed);
 	}
 }
-
 ?>
 <?php include('layout/header.php'); ?>
 
@@ -60,7 +59,7 @@ if (isset($_POST['login'])) {
 						<div class="form-actions">
 							<div class="pull-left">
 								<label class="rememberme check">
-									<input type="checkbox" name="remember" value="1" />Keep me logged in</label>
+									<input type="checkbox" name="remember" value="1" />Mantieni login</label>
 							</div>
 						</div>
 						<input type="hidden" name="login" value="yes">
