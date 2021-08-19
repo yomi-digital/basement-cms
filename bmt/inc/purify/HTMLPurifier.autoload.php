@@ -11,7 +11,7 @@ if (function_exists('spl_autoload_register') && function_exists('spl_autoload_un
     HTMLPurifier_Bootstrap::registerAutoload();
     spl_autoload_register();
 } elseif (!function_exists('__autoload')) {
-    function __autoload($class)
+    function spl_autoload_register($class)
     {
         return HTMLPurifier_Bootstrap::autoload($class);
     }

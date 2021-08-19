@@ -807,6 +807,8 @@ function returnDBObject($queryString, $params = [], $forceArray = 0)
 			return $resArray;
 		}
 	} else {
+		print_r($queryString);
+		echo '<hr>';
 		print_r($errors);
 	}
 }

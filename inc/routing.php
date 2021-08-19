@@ -11,7 +11,7 @@
 		}
 	}else{
 		$datatype='';
-		$result = returnDBObject("SHOW TABLES FROM ".$database_connect,array());
+		$result = returnDBObject("SHOW TABLES FROM ".database_connect,array());
 		foreach($result as $res){
 			$ch=explode('_',$res[0]);
 			if(isset($ch[1]) && $ch[1]==$checkPage){

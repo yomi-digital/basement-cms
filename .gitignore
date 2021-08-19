@@ -7,3 +7,7 @@ bmt/inc/db_backup/*
 .htaccess
 bmt/inc/connect.php
 .env
+.vscode
+.env*
+bmt/datatypes
+!bmt/datatypes/base_datatype
