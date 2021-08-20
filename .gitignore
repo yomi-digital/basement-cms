@@ -11,3 +11,5 @@ bmt/inc/connect.php
 .env*
 bmt/datatypes
 !bmt/datatypes/base_datatype
+endpoints/*
+!endpoints/hello-world.php
