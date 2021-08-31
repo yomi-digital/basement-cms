@@ -22,7 +22,7 @@ $subroot = '../';
 					<option value="<?php echo mainnet_contract_address; ?>">Mainnet</option>
 					<option value="<?php echo testnet_contract_address; ?>">Testnet</option>
 				</select>
-				<input type="text" placeholder="Search..." class="form-control" v-model="searcher" @focusout="(searcher.length == 0) ? searching = false : searching = true">
+				<input type="text" placeholder="Search..." class="form-control" v-model="searcher">
 				<i class="fa fa-search" style="margin:0 6px; cursor:pointer" @click="search()"></i>
 			</form>
 			<button class="btn btn-primary" @click="showLogs = !showLogs" style="margin:14px 8px 0 0; float:right">View server logs</button>
@@ -33,13 +33,12 @@ $subroot = '../';
 					<div class="pad20">
 						<div class="portlet">
 							<div class="portlet-body" style="display: block; overflow-x:scroll">
-								<pre v-show="showLogs">{{logs}}</pre>
+								<div v-show="showLogs" v-html="logs"></div>
 								<table class="table table-striped table-bordered table-hover dataTableInit">
 									<thead>
 										<tr>
 											<th>Title</th>
 											<th>Owner</th>
-											<th>Description</th>
 											<th class="text-center">Image</th>
 											<th style="text-align:center"><i class="fa fa-edit"></i></th>
 										</tr>
@@ -48,7 +47,6 @@ $subroot = '../';
 										<tr v-for="nft in nfts" v-show="nfts.length > 0 && !searching">
 											<td v-html="nft.title"></td>
 											<td v-html="nft.owner"></td>
-											<td v-html="nft.metadata.description" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 300px;"></td>
 											<td class="text-center"><img style="float:none;display:inline-block" :src="JSON.parse(nft.metadata).image.replace('ipfs.io','hub.textile.io')" height="25"></td>
 											<td style="text-align:center; width:60px">
 												<a :href="'/bmt/nft/'+nft.contract+'/'+nft.ipfs_hash" id="seeBtn" class="bmt-small-button"><i class="fa fa-eye"></i></a>
@@ -120,10 +118,8 @@ $subroot = '../';
 			watch: {
 				currentPage: function(val) {
 					this.currentPage = val
-					if (!this.searching) {
-						this.search()
-						localStorage.setItem('page', this.currentPage)
-					}
+					localStorage.setItem('page', this.currentPage)
+					this.search()
 				},
 				searchPage: function(val) {
 					this.searchPage = val
@@ -131,7 +127,7 @@ $subroot = '../';
 					localStorage.setItem('searchPage', this.searchPage)
 				},
 				contract: function(val) {
-					this.searchPage = 1
+					this.currentPage = 1
 					this.search()
 				}
 			},
@@ -142,10 +138,11 @@ $subroot = '../';
 						owner: '',
 						contract: this.contract,
 						searcher: this.searcher,
-						page: this.searchPage
+						page: this.currentPage
 					})
 					this.nfts = res.data.nfts.items
 					this.currentPage = res.data.nfts.meta.currentPage
+					this.totalPages = res.data.nfts.meta.totalPages
 					this.searching = false
 				},
 				async getLogs() {

@@ -60,7 +60,7 @@ $subroot = '../';
                 <div class="col-xs-12 col-md-9" style="margin: auto;">
                   <div style="display:flex; justify-content:space-between;align-items:center">
                     <h3>All NFT info</h3>
-                    <a style="height:40px;display:flex;align-items:center" :href="'https://opensea.io/assets/matic/'+nft.contract+'/'+nft.tokenId" class="btn btn-primary" target="_blank">See on OpenSea</a>     
+                    <a style="height:40px;display:flex;align-items:center" :href="'https://opensea.io/assets/matic/'+nft.contract+'/'+nft.tokenId" class="btn btn-primary" target="_blank">See on OpenSea</a>
                   </div>
                   <pre>{{nft}}</pre>
                 </div>
@@ -95,41 +95,45 @@ $subroot = '../';
       },
       methods: {
         async transferNFT() {
-          if(!this.transferBlock) {
+          if (!this.transferBlock) {
             const app = this
             if (!app.loading) {
               app.loading = true
               app.transferSuccess = false
-              let res = await axios.post('<?php echo umi_url; ?>/nfts/transfer', {
-                from: "fd1c570050046924e947e7f0e0bd3d373be3690e954c04f6ac7ac4d4fbb348d6",
+              let timeout = setTimeout(function() {
+                app.transferSuccess = false
+                app.transferError = "Transfer timed out, retry."
+                app.loading = false
+              }, 60000)
+              axios.post('<?php echo umi_url; ?>/nfts/transfer', {
+                from: "<?php echo owner_hash; ?>",
                 tokenId: app.tokenId,
                 to: app.to,
-                contract: "0x58f44B5f9D7EEd33054B7F184d6C44A6AF6bb88b",
+                contract: "<?php echo $_GET['contract']; ?>",
                 password: app.password
+              }).then(res => {
+                clearTimeout(timeout)
+                if (res.data.error == true) {
+                  app.transferSuccess = false
+                  app.transferError = res.data.message
+                } else {
+                  app.transferSuccess = true
+                }
+                app.loading = false
               })
-              if (res.data.error == true) {
-                app.transferSuccess = false
-                app.transferError = res.data.message
-              } else {
-                app.transferSuccess = true
-              }
-              app.loading = false
             }
-          }
-          else alert("NFT transfer blocked")
+          } else alert("NFT transfer blocked")
         },
       },
       async mounted() {
-        let res = await axios.get('<?php echo umi_url; ?>/nfts/<?php echo explode("/bmt/nft/", $_SERVER["REQUEST_URI"])[1]; ?>')
+        let res = await axios.get('<?php echo umi_url; ?>/nfts/<?php echo $_GET['contract']; ?>/<?php echo $_GET['id'] ?>')
         this.nft = res.data
         this.tokenId = this.nft.tokenId
         this.appLoading = false
-        console.log(this.tokenId)
         //Check if is possible to mint
-        if(this.tokenId > 0) {
+        if (this.tokenId > 0) {
           this.transferBlock = false
-        }
-        else {
+        } else {
           this.transferBlock = true
         }
       }
