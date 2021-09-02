@@ -42,7 +42,7 @@ $subroot = '../';
                 <div style="text-align: center; display:flex; flex-direction:column; margin:0 auto 30px auto" class="col-xs-11 col-md-6 col-lg-4">
                   <h2>Transfer NFT</h2>
                   <p style="color:#999">{{nft.title}}</p>
-                  <form style="text-align: left;" @submit.prevent="transferNFT()">
+                  <form style="text-align: left;" v-if="nft.owner !== undefined && nft.owner === ownerAddress" @submit.prevent="transferNFT()">
                     <div style="margin: 15px 0;">
                       <label>Receiving address</label>
                       <input type="text" class="form-control" placeholder="To... (eg.0x000)" v-model="to">
@@ -56,11 +56,15 @@ $subroot = '../';
                     <h4 style="float: right;color:darkgreen" v-show="transferSuccess && !loading">NFT transferito con successo <span><i class="fa fa-check"></i></span></h4>
                     <h4 style="float: right;color:darkred" v-show="!transferSuccess && !loading" v-html="transferError"><span><i class="fa fa-times" style="margin-left: 4px;"></i></span></h4>
                   </form>
+                  <div v-if="nft.owner !== undefined && nft.owner !== ownerAddress">
+                    Can't transfer NFT, you don't own it!
+                  </div>
                 </div>
                 <div class="col-xs-12 col-md-9" style="margin: auto;">
                   <div style="display:flex; justify-content:space-between;align-items:center">
                     <h3>All NFT info</h3>
-                    <a style="height:40px;display:flex;align-items:center" :href="'https://opensea.io/assets/matic/'+nft.contract+'/'+nft.tokenId" class="btn btn-primary" target="_blank">See on OpenSea</a>
+                    <a v-if="nft.contract === '<?php echo mainnet_contract_address; ?>'" style="height:40px;display:flex;align-items:center" :href="'https://opensea.io/assets/matic/'+nft.contract+'/'+nft.tokenId" class="btn btn-primary" target="_blank">See on OpenSea</a>
+                    <a v-if="nft.contract === '<?php echo testnet_contract_address; ?>'" style="height:40px;display:flex;align-items:center" :href="'https://testnets.opensea.io/assets/mumbai/'+nft.contract+'/'+nft.tokenId" class="btn btn-primary" target="_blank">See on OpenSea</a>
                   </div>
                   <pre>{{nft}}</pre>
                 </div>
@@ -90,7 +94,8 @@ $subroot = '../';
           transferError: '',
           previousPage: localStorage.getItem('page'),
           appLoading: true,
-          transferBlock: false
+          transferBlock: false,
+          ownerAddress: ""
         }
       },
       methods: {
@@ -127,6 +132,8 @@ $subroot = '../';
       },
       async mounted() {
         let res = await axios.get('<?php echo umi_url; ?>/nfts/<?php echo $_GET['contract']; ?>/<?php echo $_GET['id'] ?>')
+        let contract_owner = await axios.get('<?php echo umi_url; ?>/users/<?php echo owner_hash; ?>')
+        this.ownerAddress = contract_owner.data.address
         this.nft = res.data
         this.tokenId = this.nft.tokenId
         this.appLoading = false

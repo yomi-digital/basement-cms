@@ -13,3 +13,5 @@ bmt/datatypes
 !bmt/datatypes/base_datatype
 endpoints/*
 !endpoints/hello-world.php
+bmt/scripts/datatypes/bak/*
+!bmt/scripts/datatypes/bak/.DATATYPE_BAKS_HERE

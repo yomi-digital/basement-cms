@@ -2,7 +2,7 @@
 	<meta charset="utf-8">
 	<title>BasementCMS</title>
 	<meta name="robots" content="noindex,nofollow">
-	<meta name="description" content="BasementCMS > Rock Solid CMS for Web Developers">
+	<meta name="description" content="BasementCMS > First Web3 native CMS for crypto-developers">
 	<meta name="author" content="turinglabsorg">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="<?php echo $subdomain; ?>/bmt/layout/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet">

@@ -16,10 +16,12 @@
 																					}
 																					?>">
 				<?php echo $bmt_locales['pages']['menu']; ?></a>
-			<a href="<?php echo $subdomain; ?>/bmt/nfts" class="bmt-menu-button <?php if ($route == 'nfts') {
-																					echo 'bmt-menu-button-active';
-																				} ?>">
-				NFTs</a>
+			<?php if (mainnet_contract_address != "" || testnet_contract_address != "") { ?>
+				<a href="<?php echo $subdomain; ?>/bmt/nfts" class="bmt-menu-button <?php if ($route == 'nfts') {
+																						echo 'bmt-menu-button-active';
+																					} ?>">
+					NFTs</a>
+			<?php } ?>
 			<a href="<?php echo $subdomain; ?>/bmt/menu" class="bmt-menu-button <?php if ($route == 'menu') {
 																					echo 'bmt-menu-button-active';
 																				} ?>">
@@ -32,8 +34,15 @@
 				<div class="bmt-wrap-submenu" id="datatypes">
 					<?php
 					foreach ($dataTypes as $datatypeName) { ?>
-						<a href="<?php echo $subdomain; ?>/bmt/datatype-<?php echo $datatypeName; ?>" class="bmt-menu-button">
-							<?php echo ucfirst($datatypeName); ?></a>
+						<?php if ($datatypeName != 'traits') { ?>
+							<a href="<?php echo $subdomain; ?>/bmt/datatype-<?php echo $datatypeName; ?>" class="bmt-menu-button">
+								<?php echo ucfirst($datatypeName); ?></a>
+						<?php } else { ?>
+							<?php if (mainnet_contract_address != "" || testnet_contract_address != "") { ?>
+								<a href="<?php echo $subdomain; ?>/bmt/datatype-<?php echo $datatypeName; ?>" class="bmt-menu-button">
+									<?php echo ucfirst($datatypeName); ?></a>
+							<?php } ?>
+						<?php } ?>
 					<?php } ?>
 				</div>
 			<?php } ?>

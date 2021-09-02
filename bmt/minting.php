@@ -65,6 +65,7 @@ include('layout/header.php'); ?>
           <form @submit.prevent="false" class="col-xs-12 col-md-6" style="margin:0 auto;">
             <div v-show="!preview">
               <div class="form-group">
+                <h3>Minting settings</h3>
                 <label for="set">Network</label>
                 <select class="form-control" name="set" v-model="network">
                   <option value="testnet">Testnet</option>
@@ -76,24 +77,18 @@ include('layout/header.php'); ?>
                 <input type="text" class="form-control" name="toAddress" placeholder="Insert receiver address (leave it blank to assign to owner address)" v-model="toAddress">
               </div>
               <div class="form-group">
+                <label for="quantity">Amount</label>
+                <input type="number" class="form-control" name="quantity" placeholder="Insert quantity" min="1" v-model="quantity">
+              </div>
+              <hr>
+              <h3>Main info</h3>
+              <div class="form-group">
                 <label for="title">Title</label>
                 <input type="text" class="form-control" name="title" placeholder="Insert title" v-model="titolo">
               </div>
               <div class="form-group">
-                <label for="title">Artist name</label>
-                <input type="text" class="form-control" name="artist_name" placeholder="Insert artist name" v-model="artist_name">
-              </div>
-              <div class="form-group">
                 <label for="description">Description</label>
                 <textarea class="form-control" max="2000" style="height: 150px;" name="description" v-model="description" id="description"></textarea>
-              </div>
-              <div class="form-group">
-                <label for="title">Year</label>
-                <input type="text" class="form-control" name="year" placeholder="Insert year" v-model="year">
-              </div>
-              <div class="form-group">
-                <label for="title">Collection</label>
-                <input type="text" class="form-control" name="collection" placeholder="Insert collection" v-model="collection">
               </div>
               <div class="form-group" style="position:relative">
                 <label for="image">Media File</label>
@@ -101,10 +96,17 @@ include('layout/header.php'); ?>
                 <img src="" class="col-xs-12" style="max-height: 300px; object-fit:contain" id="imgPreview" alt="" v-show="image.length >0">
                 <button id="closeImg" @click="closeImage()" v-show="image.length >0"><i class="fa fa-times"></i></button>
               </div>
-              <div class="form-group">
-                <label for="quantity">Amount</label>
-                <input type="number" class="form-control" name="quantity" placeholder="Insert quantity" min="1" v-model="quantity">
-              </div>
+              <hr>
+              <h3>Traits</h3>
+              <?php $traits = returnDBObject("SELECT * FROM datatype_traits ORDER BY trait_order ASC", [], 1); ?>
+              <?php foreach ($traits as $trait) { ?>
+                <?php if ($trait['type'] == 'TEXT') { ?>
+                  <div class="form-group">
+                    <label for="title"><?php echo $trait['name']; ?></label>
+                    <input type="text" class="form-control" name="<?php echo strtolower($trait['name']); ?>" placeholder="Insert <?php echo $trait['name']; ?>" v-model="<?php echo strtolower($trait['name']); ?>">
+                  </div>
+                <?php } ?>
+              <?php } ?>
             </div>
             <div v-show="preview">
               <pre>{{preview}}</pre>
@@ -163,16 +165,14 @@ include('layout/header.php'); ?>
           mainnet: "<?php echo mainnet_contract_address; ?>"
         },
         toAddress: "",
-        artist_name: "",
         preview: "",
-        year: "",
         description: "",
-        collection: "",
+        <?php foreach ($traits as $trait) { echo strtolower($trait['name']).': "",'; } ?>
         minted: false
       }
     },
     methods: {
-      reload(){
+      reload() {
         const app = this
         app.pwdvector = ''
         app.titolo = ''
@@ -199,14 +199,19 @@ include('layout/header.php'); ?>
             const app = this
             //document.getElementById('description').value for description
             let data = new window.FormData();
+            let attributes = []
+            <?php foreach ($traits as $trait) { ?>
+              attributes.push({
+                trait_type: "<?php echo strtolower($trait['name']); ?>",
+                value: app.<?php echo strtolower($trait['name']); ?>
+              })
+            <?php } ?>
             data.append("title", app.titolo.trim());
             data.append("file", document.getElementById('image').files[0]);
             data.append("description", app.description);
             data.append("proxy_address", this.proxy[this.network].address);
             data.append("contract", this.contract[this.network]);
-            data.append('attributes', '[{"trait_type":"year","value":"' + app.year + '"},{"trait_type":"collection","value":"' + app.collection + '"},{"trait_type":"artist","value":"' + app.artist_name + '"}]');
-            data.append('owner_license', "nifty");
-            data.append('artist_name', app.artist_name);
+            data.append('attributes', JSON.stringify(attributes));
             data.append('mint', reallyMint);
             if (this.toAddress.length > 0) {
               data.append('address', this.toAddress);

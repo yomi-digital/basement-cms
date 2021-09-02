@@ -81,21 +81,6 @@ INSERT INTO `configs` (`id`, `code`, `value`, `mod`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `datatype_users`
---
-
-CREATE TABLE `datatype_users` (
-  `id` int(6) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>;type=>text;specs=>;multiple=>;required=>',
-  `surname` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>;type=>text;specs=>;multiple=>;required=>',
-  `email` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>;type=>text;specs=>;multiple=>;required=>',
-  `phone_number` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>;type=>text;specs=>;multiple=>;required=>',
-  `airdrop` varchar(3) DEFAULT NULL COMMENT 'print=>1;order=>;type=>select;specs=>[YES,NO];multiple=>;required=>'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `db_backup`
 --
 

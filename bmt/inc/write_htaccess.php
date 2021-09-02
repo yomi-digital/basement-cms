@@ -122,6 +122,7 @@ $htaccess .= "
 
 		#NFTS#
 		RewriteRule (\W|^)bmt/nfts(\W|$) bmt/nfts.php [L] 
+		RewriteRule bmt/nft/([^/]+)/([^/]+) bmt/nft.php?contract=$1&id=$2 [L] 
 		RewriteRule bmt/nft/([^/]+) bmt/nft.php?id=$1 [L] 
 			
 		#FILEMANAGER#
