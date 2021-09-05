@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Ago 10, 2021 alle 16:19
--- Versione del server: 5.7.30-0ubuntu0.18.04.1-log
--- Versione PHP: 7.4.8
+-- Generation Time: Sep 03, 2021 at 08:56 AM
+-- Server version: 5.7.30-0ubuntu0.18.04.1-log
+-- PHP Version: 7.4.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,17 +18,17 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `basement_db`
+-- Database: `bmt`
 --
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `admins`
+-- Table structure for table `admins`
 --
 
 CREATE TABLE `admins` (
-  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `username` varchar(255) DEFAULT NULL COMMENT 'print=>1;type=>text;required=>required',
   `password` varchar(255) DEFAULT NULL COMMENT 'print=>0;type=>password;required=>required;',
   `lastLogin` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'no',
@@ -36,7 +36,7 @@ CREATE TABLE `admins` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `admins`
+-- Dumping data for table `admins`
 --
 
 INSERT INTO `admins` (`id`, `username`, `password`, `lastLogin`, `level`) VALUES
@@ -45,18 +45,18 @@ INSERT INTO `admins` (`id`, `username`, `password`, `lastLogin`, `level`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `configs`
+-- Table structure for table `configs`
 --
 
 CREATE TABLE `configs` (
-  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `code` varchar(400) DEFAULT NULL COMMENT 'type=>text;print=>1',
   `value` text COMMENT 'type=>text;print=>1',
   `mod` int(11) DEFAULT '1' COMMENT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `configs`
+-- Dumping data for table `configs`
 --
 
 INSERT INTO `configs` (`id`, `code`, `value`, `mod`) VALUES
@@ -81,11 +81,32 @@ INSERT INTO `configs` (`id`, `code`, `value`, `mod`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `db_backup`
+-- Table structure for table `datatype_traits`
+--
+
+CREATE TABLE `datatype_traits` (
+  `id` int(6) UNSIGNED NOT NULL,
+  `name` varchar(400) DEFAULT NULL COMMENT 'print=>1;order=>;type=>text;specs=>;multiple=>;required=>required;',
+  `type` varchar(10) DEFAULT NULL COMMENT 'print=>1;order=>;type=>select;specs=>[TEXT,LIST,LONGTEXT];multiple=>;required=>required;',
+  `list` varchar(400) DEFAULT NULL COMMENT 'print=>1;order=>;type=>text;specs=>;multiple=>;required=>;',
+  `trait_order` int(11) DEFAULT NULL COMMENT 'print=>1;order=>;type=>text;specs=>;multiple=>;required=>;'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `datatype_traits`
+--
+
+INSERT INTO `datatype_traits` (`id`, `name`, `type`, `list`, `trait_order`) VALUES
+(1, 'Generation', 'TEXT', NULL, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `db_backup`
 --
 
 CREATE TABLE `db_backup` (
-  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `backup_name` varchar(400) NOT NULL,
   `backup_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -93,18 +114,18 @@ CREATE TABLE `db_backup` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `htaccess`
+-- Table structure for table `htaccess`
 --
 
 CREATE TABLE `htaccess` (
-  `id` int(6) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` int(6) UNSIGNED NOT NULL,
   `line` text COMMENT 'print=>1;order=>2;type=>textarea;specs=>html;multiple=>;required=>',
   `active` varchar(2) DEFAULT NULL COMMENT 'print=>1;order=>0;type=>select;specs=>[SI,NO];multiple=>;required=>',
   `ordine` int(11) DEFAULT NULL COMMENT 'print=>1;order=>1;type=>text;specs=>;multiple=>;required=>'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dump dei dati per la tabella `htaccess`
+-- Dumping data for table `htaccess`
 --
 
 INSERT INTO `htaccess` (`id`, `line`, `active`, `ordine`) VALUES
@@ -113,17 +134,17 @@ INSERT INTO `htaccess` (`id`, `line`, `active`, `ordine`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `languages`
+-- Table structure for table `languages`
 --
 
 CREATE TABLE `languages` (
-  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `output_name` varchar(20) NOT NULL,
   `uni_code` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `languages`
+-- Dumping data for table `languages`
 --
 
 INSERT INTO `languages` (`id`, `output_name`, `uni_code`) VALUES
@@ -132,11 +153,11 @@ INSERT INTO `languages` (`id`, `output_name`, `uni_code`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `menu`
+-- Table structure for table `menu`
 --
 
 CREATE TABLE `menu` (
-  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `order` int(11) DEFAULT NULL COMMENT 'print=>1;order=>0;type=>text;specs=>;multiple=>;required=>',
   `type` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>0;type=>select;specs=>[TOP,SIDEBAR];multiple=>;required=>',
   `title` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>0;type=>text;specs=>;multiple=>;required=>',
@@ -147,11 +168,11 @@ CREATE TABLE `menu` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `pages`
+-- Table structure for table `pages`
 --
 
 CREATE TABLE `pages` (
-  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `permalink` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>0;type=>custom;specs=>;multiple=>;required=>required',
   `language` longtext COMMENT 'print=>1;order=>0;type=>select;specs=>languages->(output_name)->(uni_code);multiple=>;required=>required',
   `title` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>0;type=>text;specs=>;multiple=>;required=>required',
@@ -167,7 +188,7 @@ CREATE TABLE `pages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `pages`
+-- Dumping data for table `pages`
 --
 
 INSERT INTO `pages` (`id`, `permalink`, `language`, `title`, `subtitle`, `content`, `ref_page`, `cover_image`, `meta_description`, `meta_keywords`, `change_freq`, `priority`, `bozza`) VALUES
@@ -176,11 +197,11 @@ INSERT INTO `pages` (`id`, `permalink`, `language`, `title`, `subtitle`, `conten
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `translations`
+-- Table structure for table `translations`
 --
 
 CREATE TABLE `translations` (
-  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `globale` varchar(255) DEFAULT NULL COMMENT 'print=>1;order=>1;type=>custom;specs=>;multiple=>;required=>',
   `is_html` varchar(2) DEFAULT NULL COMMENT 'print=>;order=>2;type=>select;specs=>[SI,NO];multiple=>;required=>',
   `locales` longtext COMMENT 'print=>1;order=>4;type=>custom;specs=>;multiple=>;required=>',
@@ -188,12 +209,128 @@ CREATE TABLE `translations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `translations`
+-- Dumping data for table `translations`
 --
 
 INSERT INTO `translations` (`id`, `globale`, `is_html`, `locales`, `is_js`) VALUES
 (8, 'helloworld', NULL, '[{\"language\":\"en\",\"locale\":\"<p>Hello World.</p>\"}]', NULL);
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `admins`
+--
+ALTER TABLE `admins`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `configs`
+--
+ALTER TABLE `configs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `datatype_traits`
+--
+ALTER TABLE `datatype_traits`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `db_backup`
+--
+ALTER TABLE `db_backup`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `htaccess`
+--
+ALTER TABLE `htaccess`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `languages`
+--
+ALTER TABLE `languages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `menu`
+--
+ALTER TABLE `menu`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `pages`
+--
+ALTER TABLE `pages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `translations`
+--
+ALTER TABLE `translations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `admins`
+--
+ALTER TABLE `admins`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `configs`
+--
+ALTER TABLE `configs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+
+--
+-- AUTO_INCREMENT for table `datatype_traits`
+--
+ALTER TABLE `datatype_traits`
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `db_backup`
+--
+ALTER TABLE `db_backup`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `htaccess`
+--
+ALTER TABLE `htaccess`
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `languages`
+--
+ALTER TABLE `languages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `menu`
+--
+ALTER TABLE `menu`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pages`
+--
+ALTER TABLE `pages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `translations`
+--
+ALTER TABLE `translations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

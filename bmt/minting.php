@@ -80,6 +80,10 @@ include('layout/header.php'); ?>
                 <label for="quantity">Amount</label>
                 <input type="number" class="form-control" name="quantity" placeholder="Insert quantity" min="1" v-model="quantity">
               </div>
+              <div class="form-group">
+                <label for="quantity">Gas</label>
+                <input type="number" class="form-control" name="gas" placeholder="Insert desired gas price in gwei (Leave blank for `fast`)" min="1" v-model="gas">
+              </div>
               <hr>
               <h3>Main info</h3>
               <div class="form-group">
@@ -148,6 +152,7 @@ include('layout/header.php'); ?>
         quantity: 1,
         loading: false,
         pwdvector: '',
+        gas: '',
         editSuccess: false,
         network: "testnet",
         proxy: {
@@ -181,6 +186,7 @@ include('layout/header.php'); ?>
         app.preview = ''
         app.year = ''
         app.collection = ''
+        app.gas = ''
         app.description = ''
         app.preview = ''
         app.network = 'testnet'
@@ -217,9 +223,10 @@ include('layout/header.php'); ?>
               data.append('address', this.toAddress);
             }
             data.append('amount', parseInt(app.quantity));
+            data.append('gas', parseInt(app.gas));
             data.append('proxy_mnemonic', this.pwdvector + "*" + this.proxy[this.network].mnemonic);
             let mintingURL = '<?php echo umi_url; ?>/nfts/mint';
-            if (parseInt(app.quantity) > 1 && app.preview !== "" && reallyMint === true) {
+            if (app.preview !== "" && reallyMint === true) {
               mintingURL = '<?php echo umi_url; ?>/nfts/batch-mint';
             }
             let config = {
