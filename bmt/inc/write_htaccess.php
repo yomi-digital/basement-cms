@@ -40,7 +40,8 @@ if (force_ssl != 'force_ssl' && force_ssl == 'on') {
 		 ";
 }
 $htaccess .= "
-		#CUSTOM-DATATYPES#";
+		#CUSTOM-DATATYPES#
+		RewriteRule api/([^/]+) api.php?request=$1 [L]";
 
 $tables = list_tables();
 foreach ($tables as $table) {
