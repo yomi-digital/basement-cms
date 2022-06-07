@@ -26,9 +26,9 @@ include('inc/initialize.php');
 					<div class="portlet">
 						<div class="row">
 							<div class="col-xs-12 text-center">
-								<img src="/bmt/layout/images/YOMI.png" style="display:inline-block; float:none" width="300">
+								<img src="/bmt/layout/images/YOMI.png" style="display:inline-block; float:none; object-fit:contain" width="300" height="300">
 								<hr>
-								BasementCMS is an open-source project<br>developed by YOMI - Digital Hub<br>
+								BasementCMS is an open-source project<br>developed by YOMI - A Web3 Company<br>
 								Version 3.0.2<hr>
 								<a href="https://github.com/yomi-digital/basement-cms" target="_blank">https://github.com/yomi-digital/basement-cms</a><br>
 								<a href="https://yomi.digital" target="_blank">https://yomi.digital</a><br><br>
