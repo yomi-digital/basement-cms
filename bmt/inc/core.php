@@ -102,7 +102,7 @@ function encryptPassword($text)
 	return $password;
 }
 function intero($v)
-{ //per essere sicuro che i valori per mktime siano degli interi 
+{ //per essere sicuro che i valori per mktime siano degli interi
 	return (int)$v;
 }
 /*CRYPT FUNCTIONS*/
@@ -135,20 +135,20 @@ function fixFloat($number)
 /*TIME FUNCTIONS*/
 function intervallo($data)
 {
-	//LA DATA DEVE ESSERE IN FORMATO Y m d (anno mese giorno) con o senza H i s 
-	//indipendente dagli usuali separatori 
-	//riduco la data ad un solo separatore 
-	$pat = array('/ /', '/\//', '/:/', '/\./'); //separatori più comuni 
+	//LA DATA DEVE ESSERE IN FORMATO Y m d (anno mese giorno) con o senza H i s
+	//indipendente dagli usuali separatori
+	//riduco la data ad un solo separatore
+	$pat = array('/ /', '/\//', '/:/', '/\./'); //separatori più comuni
 	$data = preg_replace($pat, '-', $data);
-	$d = explode("-", $data); //$d[0]=>"Y", $d[1]=>"m",$d[2]=>"d",$d[3]=>"H",$d[4]=>"i",$d[5]=>"s" 
+	$d = explode("-", $data); //$d[0]=>"Y", $d[1]=>"m",$d[2]=>"d",$d[3]=>"H",$d[4]=>"i",$d[5]=>"s"
 	$d = array_map("intero", $d);
-	//qui si potrebbero mettere delle verifiche sulla correttezza della data 
-	//soprattutto se la data proviene da un campo di input di un form es. 
+	//qui si potrebbero mettere delle verifiche sulla correttezza della data
+	//soprattutto se la data proviene da un campo di input di un form es.
 	if (!checkdate($d[1], $d[2], $d[0])) {
 		return "";
 	}
-	//potrebbero comunque mancare uno o piu dei H:i:s 
-	//comunque li forzo 
+	//potrebbero comunque mancare uno o piu dei H:i:s
+	//comunque li forzo
 	if (!isset($d[3]) || ($d[3] < 0 || $d[3] > 23)) {
 		$d[3] = 0;
 	}
@@ -158,26 +158,26 @@ function intervallo($data)
 	if (!isset($d[5]) || ($d[5] < 0 || $d[5] > 59)) {
 		$d[5] = 0;
 	}
-	//trasformo la data in timestamp 
+	//trasformo la data in timestamp
 	$data = mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]);
-	$data_ora = time(); //data attuale in timestamp 
-	//si potrebbe mettere la verifica se $delta è maggiore o minore di zero 
-	//in modo da avere o "passate" o "mancano" 
+	$data_ora = time(); //data attuale in timestamp
+	//si potrebbe mettere la verifica se $delta è maggiore o minore di zero
+	//in modo da avere o "passate" o "mancano"
 	$quando = " da ";
-	$delta = $data_ora - $data; //intervallo 
+	$delta = $data_ora - $data; //intervallo
 	if ($delta < 0) {
 		$quando = " tra ";
 	}
 	$delta = abs($delta);
-	//calcolo giorni 
+	//calcolo giorni
 	$giorni = (int)($delta / (24 * 3600));
-	$avanzo = $delta % (24 * 3600); //resto in secondi 
-	//calcolo ore 
+	$avanzo = $delta % (24 * 3600); //resto in secondi
+	//calcolo ore
 	$ore = (int)($avanzo / 3600);
-	$avanzo = $avanzo % 3600; //resto in secondi 
-	//calcolo minuti 
+	$avanzo = $avanzo % 3600; //resto in secondi
+	//calcolo minuti
 	$minuti = (int)($avanzo / 60);
-	//se trascorso meno di un minuto dico adesso 
+	//se trascorso meno di un minuto dico adesso
 	if ($giorni == o && $ore == 0 && $minuti == 0) {
 		return " adesso ";
 	}
@@ -187,30 +187,30 @@ function intervallo($data)
 	} else {
 		$passato .= " meno di un giorno";
 	}
-	/*if($ore > 0){ 
-        $passato.=" $ore<sup>h</sup> "; 
-    } 
-    if($minuti > 0){ 
-        $passato.=" $minuti<sup>m</sup> "; 
+	/*if($ore > 0){
+        $passato.=" $ore<sup>h</sup> ";
+    }
+    if($minuti > 0){
+        $passato.=" $minuti<sup>m</sup> ";
     } */
 	return " $quando " . $passato;
 }
 function intervallo_int($data)
 {
-	//LA DATA DEVE ESSERE IN FORMATO Y m d (anno mese giorno) con o senza H i s 
-	//indipendente dagli usuali separatori 
-	//riduco la data ad un solo separatore 
-	$pat = array('/ /', '/\//', '/:/', '/\./'); //separatori più comuni 
+	//LA DATA DEVE ESSERE IN FORMATO Y m d (anno mese giorno) con o senza H i s
+	//indipendente dagli usuali separatori
+	//riduco la data ad un solo separatore
+	$pat = array('/ /', '/\//', '/:/', '/\./'); //separatori più comuni
 	$data = preg_replace($pat, '-', $data);
-	$d = explode("-", $data); //$d[0]=>"Y", $d[1]=>"m",$d[2]=>"d",$d[3]=>"H",$d[4]=>"i",$d[5]=>"s" 
+	$d = explode("-", $data); //$d[0]=>"Y", $d[1]=>"m",$d[2]=>"d",$d[3]=>"H",$d[4]=>"i",$d[5]=>"s"
 	$d = array_map("intero", $d);
-	//qui si potrebbero mettere delle verifiche sulla correttezza della data 
-	//soprattutto se la data proviene da un campo di input di un form es. 
+	//qui si potrebbero mettere delle verifiche sulla correttezza della data
+	//soprattutto se la data proviene da un campo di input di un form es.
 	if (!checkdate($d[1], $d[2], $d[0])) {
 		return "";
 	}
-	//potrebbero comunque mancare uno o piu dei H:i:s 
-	//comunque li forzo 
+	//potrebbero comunque mancare uno o piu dei H:i:s
+	//comunque li forzo
 	if (!isset($d[3]) || ($d[3] < 0 || $d[3] > 23)) {
 		$d[3] = 0;
 	}
@@ -220,26 +220,26 @@ function intervallo_int($data)
 	if (!isset($d[5]) || ($d[5] < 0 || $d[5] > 59)) {
 		$d[5] = 0;
 	}
-	//trasformo la data in timestamp 
+	//trasformo la data in timestamp
 	$data = mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]);
-	$data_ora = time(); //data attuale in timestamp 
-	//si potrebbe mettere la verifica se $delta è maggiore o minore di zero 
-	//in modo da avere o "passate" o "mancano" 
+	$data_ora = time(); //data attuale in timestamp
+	//si potrebbe mettere la verifica se $delta è maggiore o minore di zero
+	//in modo da avere o "passate" o "mancano"
 	$quando = " da ";
-	$delta = $data_ora - $data; //intervallo 
+	$delta = $data_ora - $data; //intervallo
 	if ($delta < 0) {
 		$quando = " tra ";
 	}
 	$delta = abs($delta);
-	//calcolo giorni 
+	//calcolo giorni
 	$giorni = (int)($delta / (24 * 3600));
-	$avanzo = $delta % (24 * 3600); //resto in secondi 
-	//calcolo ore 
+	$avanzo = $delta % (24 * 3600); //resto in secondi
+	//calcolo ore
 	$ore = (int)($avanzo / 3600);
-	$avanzo = $avanzo % 3600; //resto in secondi 
-	//calcolo minuti 
+	$avanzo = $avanzo % 3600; //resto in secondi
+	//calcolo minuti
 	$minuti = (int)($avanzo / 60);
-	//se trascorso meno di un minuto dico adesso 
+	//se trascorso meno di un minuto dico adesso
 	if ($giorni == 0 && $ore == 0 && $minuti == 0) {
 		return " adesso ";
 	}
@@ -249,30 +249,30 @@ function intervallo_int($data)
 	} else {
 		$passato .= "0";
 	}
-	/*if($ore > 0){ 
-        $passato.=" $ore<sup>h</sup> "; 
-    } 
-    if($minuti > 0){ 
-        $passato.=" $minuti<sup>m</sup> "; 
+	/*if($ore > 0){
+        $passato.=" $ore<sup>h</sup> ";
+    }
+    if($minuti > 0){
+        $passato.=" $minuti<sup>m</sup> ";
     } */
 	return $passato;
 }
 function intervallo_completo($data)
 {
-	//LA DATA DEVE ESSERE IN FORMATO Y m d (anno mese giorno) con o senza H i s 
-	//indipendente dagli usuali separatori 
-	//riduco la data ad un solo separatore 
-	$pat = array('/ /', '/\//', '/:/', '/\./'); //separatori più comuni 
+	//LA DATA DEVE ESSERE IN FORMATO Y m d (anno mese giorno) con o senza H i s
+	//indipendente dagli usuali separatori
+	//riduco la data ad un solo separatore
+	$pat = array('/ /', '/\//', '/:/', '/\./'); //separatori più comuni
 	$data = preg_replace($pat, '-', $data);
-	$d = explode("-", $data); //$d[0]=>"Y", $d[1]=>"m",$d[2]=>"d",$d[3]=>"H",$d[4]=>"i",$d[5]=>"s" 
+	$d = explode("-", $data); //$d[0]=>"Y", $d[1]=>"m",$d[2]=>"d",$d[3]=>"H",$d[4]=>"i",$d[5]=>"s"
 	$d = array_map("intero", $d);
-	//qui si potrebbero mettere delle verifiche sulla correttezza della data 
-	//soprattutto se la data proviene da un campo di input di un form es. 
+	//qui si potrebbero mettere delle verifiche sulla correttezza della data
+	//soprattutto se la data proviene da un campo di input di un form es.
 	if (!checkdate($d[1], $d[2], $d[0])) {
 		return "";
 	}
-	//potrebbero comunque mancare uno o piu dei H:i:s 
-	//comunque li forzo 
+	//potrebbero comunque mancare uno o piu dei H:i:s
+	//comunque li forzo
 	if (!isset($d[3]) || ($d[3] < 0 || $d[3] > 23)) {
 		$d[3] = 0;
 	}
@@ -282,26 +282,26 @@ function intervallo_completo($data)
 	if (!isset($d[5]) || ($d[5] < 0 || $d[5] > 59)) {
 		$d[5] = 0;
 	}
-	//trasformo la data in timestamp 
+	//trasformo la data in timestamp
 	$data = mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]);
-	$data_ora = time(); //data attuale in timestamp 
-	//si potrebbe mettere la verifica se $delta è maggiore o minore di zero 
-	//in modo da avere o "passate" o "mancano" 
+	$data_ora = time(); //data attuale in timestamp
+	//si potrebbe mettere la verifica se $delta è maggiore o minore di zero
+	//in modo da avere o "passate" o "mancano"
 	$quando = " da ";
-	$delta = $data_ora - $data; //intervallo 
+	$delta = $data_ora - $data; //intervallo
 	if ($delta < 0) {
 		$quando = " tra ";
 	}
 	$delta = abs($delta);
-	//calcolo giorni 
+	//calcolo giorni
 	$giorni = (int)($delta / (24 * 3600));
-	$avanzo = $delta % (24 * 3600); //resto in secondi 
-	//calcolo ore 
+	$avanzo = $delta % (24 * 3600); //resto in secondi
+	//calcolo ore
 	$ore = (int)($avanzo / 3600);
-	$avanzo = $avanzo % 3600; //resto in secondi 
-	//calcolo minuti 
+	$avanzo = $avanzo % 3600; //resto in secondi
+	//calcolo minuti
 	$minuti = (int)($avanzo / 60);
-	//se trascorso meno di un minuto dico adesso 
+	//se trascorso meno di un minuto dico adesso
 	if ($giorni == 0 && $ore == 0 && $minuti == 0) {
 		return " adesso ";
 	}
@@ -715,7 +715,7 @@ function returnMailTextHTML($testo, $titolo)
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			</head>
 			<body style="margin: 0; padding: 0;">
-				<table border="0" cellpadding="0" cellspacing="0" width="100%">	
+				<table border="0" cellpadding="0" cellspacing="0" width="100%">
 					<tr>
 						<td style="padding: 10px 0 30px 0;">
 							<table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border: 1px solid #cccccc; border-collapse: collapse;">
@@ -738,7 +738,7 @@ function returnMailTextHTML($testo, $titolo)
 
 	$mailHTML .= '		<tr>
 												<td style="padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 14px; line-height: 20px;">' . $testo . '
-												
+
 												</td>
 											</tr>
 										</table>
@@ -752,7 +752,7 @@ function returnMailTextHTML($testo, $titolo)
 													basementcms.io<br/>
 												</td>
 												<td align="right" width="25%">
-													
+
 												</td>
 											</tr>
 										</table>
@@ -1048,8 +1048,10 @@ function returnCorrectInputField($field_type, $field_name, $required, $specs, $v
 			$returnField .= '<input type="password" ' . $required . ' value="" class="form-control formInput" id="' . $field_name . '" name="' . $field_name . '">';
 			break;
 		case "file":
-			$returnField .= '<input type="file" ' . $required . ' class="form-control formInput" id="' . $field_name . '" name="' . $field_name . '">';
-			if ($value != '') {
+			if ($value == '')
+				$returnField .= '<input type="file" ' . $required . ' class="form-control formInput" id="' . $field_name . '" name="' . $field_name . '">';
+			else {
+				$returnField .= '<input type="file" ' . ' class="form-control formInput" id="' . $field_name . '" name="' . $field_name . '">';
 				$returnField .= '<input type="hidden" name="old_' . $field_name . '" value="' . $value . '">';
 				$returnField .= '<a href="/contents/' . $specs . '/' . $value . '" target="_blank">> File caricato online <</a><br><span style="font-size:10px; margin-top:-5px">Questo file viene mantenuto automaticamente</span>';
 			}
@@ -1063,7 +1065,7 @@ function returnCorrectInputField($field_type, $field_name, $required, $specs, $v
 			break;
 		case "date":
 			$returnField .= '
-					<div class="input-group"> 
+					<div class="input-group">
 						<input type="text" ' . $required . ' value="' . data_store_print($value) . '" class="form-control date-picker formInput" id="' . $field_name . '" name="' . $field_name . '">
 					</div>';
 			break;
