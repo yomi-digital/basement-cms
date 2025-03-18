@@ -9,7 +9,7 @@
 						if($i==1){echo '<div class="col-sm-6 col-sm-offset-3">';}
 						$instructions=returnFieldInstructions($field['Comment']);
 						if($instructions['type']!='custom'){
-							echo returnCorrectInputField($instructions['type'], $field['Field'], $instructions['required'], $instructions['specs'], '');
+							echo returnCorrectInputField($instructions['type'], $field['Field'], $instructions['required'], $instructions['specs'], '', $instructions['multiple']);
 						}else{
 							echo $customFields[$field['Field']];
 						}
